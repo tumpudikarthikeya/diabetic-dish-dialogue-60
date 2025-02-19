@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { MessageSquare, History, User, Settings } from "lucide-react";
+import { MessageSquare, History, User, Settings, Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Select,
@@ -17,6 +17,7 @@ import {
   SidebarGroupLabel,
   SidebarProvider,
 } from "@/components/ui/sidebar";
+import { useTheme } from "next-themes";
 
 interface Message {
   id: string;
@@ -25,6 +26,7 @@ interface Message {
 }
 
 const Index = () => {
+  const { theme, setTheme } = useTheme();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -61,19 +63,19 @@ const Index = () => {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-full bg-gradient-to-b from-zinc-900 to-black text-white overflow-hidden">
+      <div className="flex h-screen w-full bg-gradient-to-b from-background to-background/80 text-foreground overflow-hidden">
         {/* Sidebar */}
-        <Sidebar className="w-64 border-r border-zinc-800">
+        <Sidebar className="w-64 border-r border-border">
           <SidebarContent>
             {/* User Profile Section */}
             <SidebarGroup>
-              <div className="p-4 flex items-center gap-3 border-b border-zinc-800">
-                <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center">
-                  <User className="w-6 h-6 text-white" />
+              <div className="p-4 flex items-center gap-3 border-b border-border">
+                <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+                  <User className="w-6 h-6 text-primary-foreground" />
                 </div>
                 <div>
                   <h3 className="font-medium">Guest User</h3>
-                  <p className="text-sm text-zinc-400">Sign in to save chats</p>
+                  <p className="text-sm text-muted-foreground">Sign in to save chats</p>
                 </div>
               </div>
             </SidebarGroup>
@@ -83,11 +85,11 @@ const Index = () => {
               <SidebarGroupLabel>Chat History</SidebarGroupLabel>
               <SidebarGroupContent className="px-2">
                 <div className="space-y-1">
-                  <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-zinc-800 text-sm flex items-center gap-2">
+                  <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent text-sm flex items-center gap-2">
                     <History className="w-4 h-4" />
                     <span>Recent Chat 1</span>
                   </button>
-                  <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-zinc-800 text-sm flex items-center gap-2">
+                  <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent text-sm flex items-center gap-2">
                     <History className="w-4 h-4" />
                     <span>Recent Chat 2</span>
                   </button>
@@ -97,10 +99,19 @@ const Index = () => {
 
             {/* Settings */}
             <SidebarGroup className="mt-auto">
-              <button className="w-full text-left p-4 hover:bg-zinc-800 flex items-center gap-2 text-zinc-400">
-                <Settings className="w-4 h-4" />
-                <span>Settings</span>
-              </button>
+              <div className="space-y-2 p-4">
+                <button 
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent flex items-center gap-2 text-muted-foreground"
+                >
+                  {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                  <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+                </button>
+                <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-accent flex items-center gap-2 text-muted-foreground">
+                  <Settings className="w-4 h-4" />
+                  <span>Settings</span>
+                </button>
+              </div>
             </SidebarGroup>
           </SidebarContent>
         </Sidebar>
@@ -108,10 +119,10 @@ const Index = () => {
         {/* Main Chat Area */}
         <div className="flex-1 flex flex-col h-screen">
           <div className="flex-1 p-4 md:p-6 max-w-4xl mx-auto w-full">
-            <div className="bg-zinc-900/50 backdrop-blur-lg rounded-lg border border-zinc-800 shadow-xl h-full flex flex-col">
+            <div className="bg-card/50 backdrop-blur-lg rounded-lg border border-border shadow-xl h-full flex flex-col">
               {/* Header */}
-              <div className="p-4 border-b border-zinc-800 flex items-center gap-3">
-                <MessageSquare className="w-6 h-6 text-emerald-500" />
+              <div className="p-4 border-b border-border flex items-center gap-3">
+                <MessageSquare className="w-6 h-6 text-primary" />
                 <h1 className="text-lg font-medium">Diabetic Food Assistant</h1>
               </div>
 
@@ -129,8 +140,8 @@ const Index = () => {
                       className={cn(
                         "max-w-[80%] rounded-lg p-3 animate-slideIn",
                         message.type === "user"
-                          ? "bg-emerald-500 text-white ml-auto"
-                          : "bg-zinc-800 text-zinc-100"
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-foreground"
                       )}
                     >
                       {message.content}
@@ -140,13 +151,13 @@ const Index = () => {
               </div>
 
               {/* Input */}
-              <form onSubmit={handleSubmit} className="p-4 border-t border-zinc-800">
+              <form onSubmit={handleSubmit} className="p-4 border-t border-border">
                 <div className="flex gap-2">
                   <Select
                     value={diabeticType}
                     onValueChange={setDiabeticType}
                   >
-                    <SelectTrigger className="w-[140px] bg-zinc-800 border-zinc-700">
+                    <SelectTrigger className="w-[140px]">
                       <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -163,11 +174,11 @@ const Index = () => {
                       value={inputValue}
                       onChange={(e) => setInputValue(e.target.value)}
                       placeholder="Type your message..."
-                      className="flex-1 bg-zinc-800 border border-zinc-700 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      className="flex-1 bg-background border border-input rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                     />
                     <button
                       type="submit"
-                      className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-r-lg transition-colors"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-r-lg transition-colors"
                     >
                       Send
                     </button>
