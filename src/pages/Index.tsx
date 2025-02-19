@@ -17,7 +17,7 @@ import {
   SidebarGroupLabel,
   SidebarProvider,
 } from "@/components/ui/sidebar";
-import { useTheme } from "next-themes";
+import { useTheme } from "@/components/ui/theme-provider";
 
 interface Message {
   id: string;
@@ -70,8 +70,8 @@ const Index = () => {
             {/* User Profile Section */}
             <SidebarGroup>
               <div className="p-4 flex items-center gap-3 border-b border-border">
-                <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-                  <User className="w-6 h-6 text-primary-foreground" />
+                <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center">
+                  <User className="w-6 h-6 text-white" />
                 </div>
                 <div>
                   <h3 className="font-medium">Guest User</h3>
@@ -122,7 +122,7 @@ const Index = () => {
             <div className="bg-card/50 backdrop-blur-lg rounded-lg border border-border shadow-xl h-full flex flex-col">
               {/* Header */}
               <div className="p-4 border-b border-border flex items-center gap-3">
-                <MessageSquare className="w-6 h-6 text-primary" />
+                <MessageSquare className="w-6 h-6 text-emerald-500" />
                 <h1 className="text-lg font-medium">Diabetic Food Assistant</h1>
               </div>
 
@@ -140,7 +140,7 @@ const Index = () => {
                       className={cn(
                         "max-w-[80%] rounded-lg p-3 animate-slideIn",
                         message.type === "user"
-                          ? "bg-primary text-primary-foreground"
+                          ? "bg-emerald-500 text-white"
                           : "bg-muted text-foreground"
                       )}
                     >
@@ -174,11 +174,11 @@ const Index = () => {
                       value={inputValue}
                       onChange={(e) => setInputValue(e.target.value)}
                       placeholder="Type your message..."
-                      className="flex-1 bg-background border border-input rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+                      className="flex-1 bg-background border border-input rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                     />
                     <button
                       type="submit"
-                      className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-r-lg transition-colors"
+                      className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-r-lg transition-colors"
                     >
                       Send
                     </button>
