@@ -45,6 +45,9 @@ const Index = () => {
 
   const sendMessageToRasa = async (message: string) => {
     try {
+      const formattedMessage = `${diabeticType}: ${message}`;
+      console.log("Sending message to Rasa:", formattedMessage);
+      
       const response = await fetch("http://localhost:5005/webhooks/rest/webhook", {
         method: "POST",
         headers: {
@@ -52,15 +55,25 @@ const Index = () => {
         },
         body: JSON.stringify({
           sender: "user123",
-          message: `${diabeticType}: ${message}`,
+          message: formattedMessage,
         }),
       });
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data: RasaResponse[] = await response.json();
-      return data[0]?.text || "Sorry, I couldn't process your request.";
+      console.log("Rasa response:", data);
+      
+      if (!data || data.length === 0) {
+        return "Sorry, I couldn't understand your request. Please try again.";
+      }
+      
+      return data[0].text;
     } catch (error) {
       console.error("Error sending message to Rasa:", error);
-      return "Sorry, I'm having trouble connecting to the server.";
+      return "Sorry, I'm having trouble connecting to the server. Please ensure the Rasa server is running on localhost:5005.";
     }
   };
 
@@ -68,9 +81,12 @@ const Index = () => {
     e.preventDefault();
     if (!inputValue.trim() || isLoading) return;
 
+    const userMessage = inputValue.trim();
+    
+    // Add user message to chat
     const newMessage: Message = {
       id: Date.now().toString(),
-      content: inputValue,
+      content: userMessage,
       type: "user",
     };
 
@@ -79,7 +95,7 @@ const Index = () => {
     setInputValue("");
 
     // Get response from Rasa
-    const botResponseText = await sendMessageToRasa(inputValue);
+    const botResponseText = await sendMessageToRasa(userMessage);
     
     const botResponse: Message = {
       id: (Date.now() + 1).toString(),
