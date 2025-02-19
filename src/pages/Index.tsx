@@ -25,6 +25,11 @@ interface Message {
   type: "user" | "bot";
 }
 
+interface RasaResponse {
+  recipient_id: string;
+  text: string;
+}
+
 const Index = () => {
   const { theme, setTheme } = useTheme();
   const [messages, setMessages] = useState<Message[]>([
@@ -36,10 +41,32 @@ const Index = () => {
   ]);
   const [inputValue, setInputValue] = useState("");
   const [diabeticType, setDiabeticType] = useState("no_diabetic");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const sendMessageToRasa = async (message: string) => {
+    try {
+      const response = await fetch("http://localhost:5005/webhooks/rest/webhook", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          sender: "user123",
+          message: `${diabeticType}: ${message}`,
+        }),
+      });
+
+      const data: RasaResponse[] = await response.json();
+      return data[0]?.text || "Sorry, I couldn't process your request.";
+    } catch (error) {
+      console.error("Error sending message to Rasa:", error);
+      return "Sorry, I'm having trouble connecting to the server.";
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() || isLoading) return;
 
     const newMessage: Message = {
       id: Date.now().toString(),
@@ -48,17 +75,20 @@ const Index = () => {
     };
 
     setMessages((prev) => [...prev, newMessage]);
-    // Here you would typically make an API call to get the bot's response
+    setIsLoading(true);
+    setInputValue("");
+
+    // Get response from Rasa
+    const botResponseText = await sendMessageToRasa(inputValue);
+    
     const botResponse: Message = {
       id: (Date.now() + 1).toString(),
-      content: `Thank you for your message. I see you're ${diabeticType}. I'll provide recommendations accordingly.`,
+      content: botResponseText,
       type: "bot",
     };
-    setTimeout(() => {
-      setMessages((prev) => [...prev, botResponse]);
-    }, 1000);
 
-    setInputValue("");
+    setMessages((prev) => [...prev, botResponse]);
+    setIsLoading(false);
   };
 
   return (
@@ -148,6 +178,13 @@ const Index = () => {
                     </div>
                   </div>
                 ))}
+                {isLoading && (
+                  <div className="flex justify-start">
+                    <div className="bg-muted text-foreground max-w-[80%] rounded-lg p-3">
+                      Thinking...
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Input */}
@@ -162,10 +199,10 @@ const Index = () => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="no_diabetic">No Diabetic</SelectItem>
-                      <SelectItem value="mild">Mild</SelectItem>
-                      <SelectItem value="moderate">Moderate</SelectItem>
-                      <SelectItem value="severe">Severe</SelectItem>
-                      <SelectItem value="profiliative">Profiliative</SelectItem>
+                      <SelectItem value="mild_diabetic">Mild Diabetic</SelectItem>
+                      <SelectItem value="moderate_diabetic">Moderate Diabetic</SelectItem>
+                      <SelectItem value="severe_diabetic">Severe Diabetic</SelectItem>
+                      <SelectItem value="profiliative_diabetic">Profiliative Diabetic</SelectItem>
                     </SelectContent>
                   </Select>
                   <div className="flex-1 flex">
@@ -175,10 +212,15 @@ const Index = () => {
                       onChange={(e) => setInputValue(e.target.value)}
                       placeholder="Type your message..."
                       className="flex-1 bg-background border border-input rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      disabled={isLoading}
                     />
                     <button
                       type="submit"
-                      className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-r-lg transition-colors"
+                      className={cn(
+                        "bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-r-lg transition-colors",
+                        isLoading && "opacity-50 cursor-not-allowed"
+                      )}
+                      disabled={isLoading}
                     >
                       Send
                     </button>
