@@ -19,6 +19,9 @@ import {
 } from "@/components/ui/sidebar";
 import { useTheme } from "@/components/ui/theme-provider";
 
+import { useEffect, useRef } from "react";
+
+
 interface Message {
   id: string;
   content: string;
@@ -29,6 +32,7 @@ interface RasaResponse {
   recipient_id: string;
   text: string;
 }
+
 
 const Index = () => {
   const { theme, setTheme } = useTheme();
@@ -42,13 +46,17 @@ const Index = () => {
   const [inputValue, setInputValue] = useState("");
   const [diabeticType, setDiabeticType] = useState("no_diabetic");
   const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
   const sendMessageToRasa = async (message: string) => {
     try {
       const formattedMessage = `${diabeticType}: ${message}`;
       console.log("Sending message to Rasa:", formattedMessage);
       
-      const response = await fetch("http://localhost:5005/webhooks/rest/webhook", {
+      const response = await fetch("https://refactored-space-barnacle-r9pv6w5rwg5cw5g9-5006.app.github.dev/webhooks/rest/webhook", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -58,6 +66,8 @@ const Index = () => {
           message: formattedMessage,
         }),
       });
+      console.log(response);
+      
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -76,6 +86,8 @@ const Index = () => {
       return "Sorry, I'm having trouble connecting to the server. Please ensure the Rasa server is running on localhost:5005.";
     }
   };
+
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -163,47 +175,46 @@ const Index = () => {
         </Sidebar>
 
         {/* Main Chat Area */}
-        <div className="flex-1 flex flex-col h-screen">
-          <div className="flex-1 p-4 md:p-6 max-w-4xl mx-auto w-full">
-            <div className="bg-card/50 backdrop-blur-lg rounded-lg border border-border shadow-xl h-full flex flex-col">
+        <div className="flex-1 flex flex-col h-screen ">
+          <div className="flex-1 p-4 md:p-6 w-full mx-auto ">
+            <div className="bg-card/50 backdrop-blur-lg rounded-lg border border-border shadow-xl h-full flex flex-col ">
               {/* Header */}
               <div className="p-4 border-b border-border flex items-center gap-3">
                 <MessageSquare className="w-6 h-6 text-emerald-500" />
                 <h1 className="text-lg font-medium">Diabetic Food Assistant</h1>
               </div>
 
-              {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={cn(
-                      "flex",
-                      message.type === "user" ? "justify-end" : "justify-start"
-                    )}
-                  >
-                    <div
-                      className={cn(
-                        "max-w-[80%] rounded-lg p-3 animate-slideIn",
-                        message.type === "user"
-                          ? "bg-emerald-500 text-white"
-                          : "bg-muted text-foreground"
-                      )}
-                    >
-                      {message.content}
-                    </div>
-                  </div>
-                ))}
-                {isLoading && (
-                  <div className="flex justify-start">
-                    <div className="bg-muted text-foreground max-w-[80%] rounded-lg p-3">
-                      Thinking...
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Input */}
+              <div className="flex-1 p-4 space-y-4 overflow-y-auto max-h-[calc(100vh-180px)]">
+  {messages.map((message) => (
+    <div
+      key={message.id}
+      className={cn(
+        "flex",
+        message.type === "user" ? "justify-end" : "justify-start"
+      )}
+    >
+      <div
+        className={cn(
+          "max-w-[80%] rounded-lg p-3 animate-slideIn whitespace-pre-line",
+          message.type === "user"
+            ? "bg-emerald-500 text-white"
+            : "bg-muted text-foreground"
+        )}
+      >
+        {message.content}
+      </div>
+    </div>
+  ))}
+  {isLoading && (
+    <div className="flex justify-start">
+      <div className="bg-muted text-foreground max-w-[80%] rounded-lg p-3">
+        Thinking...
+      </div>
+    </div>
+  )}
+  {/* Empty div to keep scroll at bottom */}
+  <div ref={messagesEndRef} />
+</div>              {/* Input */}
               <form onSubmit={handleSubmit} className="p-4 border-t border-border">
                 <div className="flex gap-2">
                   <Select
