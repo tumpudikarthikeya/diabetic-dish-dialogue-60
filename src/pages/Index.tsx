@@ -56,7 +56,7 @@ const Index = () => {
       const formattedMessage = `${diabeticType}: ${message}`;
       console.log("Sending message to Rasa:", formattedMessage);
       
-      const response = await fetch("https://refactored-space-barnacle-r9pv6w5rwg5cw5g9-5006.app.github.dev/webhooks/rest/webhook", {
+      const response = await fetch("https://supreme-chainsaw-56xpr574xpqh755v-5006.app.github.dev/webhooks/rest/webhook", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -80,7 +80,7 @@ const Index = () => {
         return "Sorry, I couldn't understand your request. Please try again.";
       }
       
-      return data[0].text;
+      return data[1].text;
     } catch (error) {
       console.error("Error sending message to Rasa:", error);
       return "Sorry, I'm having trouble connecting to the server. Please ensure the Rasa server is running on localhost:5005.";
