@@ -56,7 +56,7 @@ const Index = () => {
       const formattedMessage = `${diabeticType}: ${message}`;
       console.log("Sending message to Rasa:", formattedMessage);
       
-      const response = await fetch("https://supreme-chainsaw-56xpr574xpqh755v-5006.app.github.dev/webhooks/rest/webhook", {
+      const response = await fetch("https://obscure-space-happiness-rq9q59pr9x62pjxv-5006.app.github.dev/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
