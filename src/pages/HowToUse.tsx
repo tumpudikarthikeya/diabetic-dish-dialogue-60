@@ -14,28 +14,42 @@ const HowToUse = () => {
 
           <div className="space-y-8">
             <div className="bg-card/50 backdrop-blur-lg rounded-lg border border-border p-6">
-              <h2 className="text-2xl font-semibold mb-4">Query Format Guide</h2>
+              <h2 className="text-2xl font-semibold mb-4">Step 1: Select Your Diabetic Level</h2>
+              <p className="text-muted-foreground mb-4">
+                Before asking for meal recommendations, select your diabetic level from the dropdown menu:
+              </p>
+              <ul className="space-y-2 text-muted-foreground ml-6 list-disc mb-6">
+                <li>No Diabetic</li>
+                <li>Mild Diabetic</li>
+                <li>Moderate Diabetic</li>
+                <li>Severe Diabetic</li>
+                <li>Profiliative Diabetic</li>
+              </ul>
+            </div>
+
+            <div className="bg-card/50 backdrop-blur-lg rounded-lg border border-border p-6">
+              <h2 className="text-2xl font-semibold mb-4">Step 2: Query Format Guide</h2>
               <p className="text-muted-foreground mb-6">
                 To get the best meal recommendations, include the following details in your query:
               </p>
 
-              <div className="relative mt-8 mb-12">
+              <div className="relative mt-12 mb-16">
                 <Input 
                   readOnly 
                   value="I want vegetarian lunch suggestions for Monday" 
-                  className="w-full text-center bg-background/50"
+                  className="w-full text-center bg-background/50 text-base"
                 />
-                <div className="absolute -top-6 left-1/4 transform -translate-x-1/2">
+                <div className="absolute -top-8 left-[85px] transform -translate-x-1/2">
                   <ArrowDown className="w-4 h-4 text-emerald-500" />
-                  <span className="text-sm text-emerald-500">Meal Type</span>
+                  <span className="text-sm text-emerald-500 whitespace-nowrap">Meal Type</span>
                 </div>
-                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2">
+                <div className="absolute -top-8 left-[220px] transform -translate-x-1/2">
                   <ArrowDown className="w-4 h-4 text-emerald-500" />
-                  <span className="text-sm text-emerald-500">Meal Time</span>
+                  <span className="text-sm text-emerald-500 whitespace-nowrap">Meal Time</span>
                 </div>
-                <div className="absolute -top-6 left-3/4 transform -translate-x-1/2">
+                <div className="absolute -top-8 left-[360px] transform -translate-x-1/2">
                   <ArrowDown className="w-4 h-4 text-emerald-500" />
-                  <span className="text-sm text-emerald-500">Day</span>
+                  <span className="text-sm text-emerald-500 whitespace-nowrap">Day</span>
                 </div>
               </div>
 
