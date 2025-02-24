@@ -1,5 +1,5 @@
 
-import { HelpCircle, ArrowDown, MessageSquare } from "lucide-react";
+import { HelpCircle, MessageSquare } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 const HowToUse = () => {
@@ -33,27 +33,16 @@ const HowToUse = () => {
                 To get the best meal recommendations, include the following details in your query:
               </p>
 
-              <div className="relative mt-12 mb-16">
-                <Input 
-                  readOnly 
-                  value="I want vegetarian lunch suggestions for Monday" 
-                  className="w-full text-center bg-background/50 text-base"
-                />
-                <div className="absolute -top-8 left-[85px] transform -translate-x-1/2">
-                  <ArrowDown className="w-4 h-4 text-emerald-500" />
-                  <span className="text-sm text-emerald-500 whitespace-nowrap">Meal Type</span>
-                </div>
-                <div className="absolute -top-8 left-[220px] transform -translate-x-1/2">
-                  <ArrowDown className="w-4 h-4 text-emerald-500" />
-                  <span className="text-sm text-emerald-500 whitespace-nowrap">Meal Time</span>
-                </div>
-                <div className="absolute -top-8 left-[360px] transform -translate-x-1/2">
-                  <ArrowDown className="w-4 h-4 text-emerald-500" />
-                  <span className="text-sm text-emerald-500 whitespace-nowrap">Day</span>
+              <div className="mb-8">
+                <p className="text-sm text-muted-foreground mb-2">Example Query Format:</p>
+                <div className="p-4 bg-background/50 rounded-lg border border-border text-center">
+                  I want <span className="text-emerald-500 font-medium">vegetarian</span> {" "}
+                  <span className="text-emerald-500 font-medium">lunch</span> suggestions for {" "}
+                  <span className="text-emerald-500 font-medium">Monday</span>
                 </div>
               </div>
 
-              <div className="space-y-6 mt-8">
+              <div className="space-y-6">
                 <div className="p-4 border border-border rounded-lg">
                   <h3 className="font-semibold mb-2">Required Information</h3>
                   <ul className="space-y-3 text-muted-foreground">
